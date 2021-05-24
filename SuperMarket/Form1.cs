@@ -29,16 +29,9 @@ namespace SuperMarket
             conn = new OracleConnection(ordb);
             conn.Open();
 
-
             OracleCommand cmd = new OracleCommand();
-            cmd.Connection = conn;
-            
-
-
+            cmd.Connection = conn;           
         }
-
-
-
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -94,13 +87,14 @@ namespace SuperMarket
                 return true;
         }
 
-
-
         private void button2_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
 
-        
+        private void loginForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Application.Exit();
+        }
     }
 }
