@@ -28,7 +28,14 @@ namespace SuperMarket
 
         private void employeeForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Application.Exit();
+            this.Hide();
+            loginForm loginForm = new loginForm();
+            loginForm.Show();
+        }
+
+        private void employeeForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

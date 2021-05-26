@@ -13,8 +13,6 @@ using Oracle.DataAccess.Types;
 namespace SuperMarket
 {
 
-   
-
     public partial class loginForm : Form
     {
         string ordb = "Data source=orcl;User Id=scott;Password=tiger;";
@@ -27,10 +25,7 @@ namespace SuperMarket
         private void Form1_Load(object sender, EventArgs e)
         {
             conn = new OracleConnection(ordb);
-            conn.Open();
-
-            OracleCommand cmd = new OracleCommand();
-            cmd.Connection = conn;           
+            conn.Open();         
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -48,23 +43,42 @@ namespace SuperMarket
                 c.Parameters.Add("email", userIdTextBox.ToString());
                 c.Parameters.Add("password", passwordTextBox.ToString());     
                 OracleDataReader dr = c.ExecuteReader();
-                string var =null;
+                
                 if (dr.Read())
                 {
-                    var = dr[0].ToString();
+
+                    var isManager = dr[0].ToString();
+
+                    if (isManager.Equals(""))
+                    {
+                        this.Hide();
+                        managerForm mangForm = new managerForm();
+                        mangForm.Show(); //manager form
+                    }
+                    else
+                    {
+                        this.Hide();
+                        employeeForm empForm = new employeeForm();
+                        empForm.Show(); //employee form
+                    }
+
+                }
+                
+                else
+                {
+                    MessageBox.Show("Incorrect email or password");
+                    userIdTextBox.Text = "";
+                    passwordTextBox.Text = "";
+
                 }
                 dr.Close();
-                managerForm f2 = new managerForm();
-                employeeForm f3 = new employeeForm();
+                
 
-                //sara@gmail.com 123456 employee
+                //Sara@gmail.com 123456 employee
                 //Maria@gmail.com 1010 manager 1
                 //Rana@gmail.com 2323 manager 2
 
-                if (var.Equals("1")|| var.Equals("2"))
-                    f2.Show(); //manager form
-                else
-                    f3.Show(); //employee form
+                
               
             }
             
@@ -94,6 +108,7 @@ namespace SuperMarket
 
         private void loginForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            //conn.Close();
             Application.Exit();
         }
     }

@@ -99,7 +99,9 @@
             this.Controls.Add(this.AddEmpBtn);
             this.Controls.Add(this.WelcomeLabel);
             this.Name = "managerForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Manager";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.managerForm_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
