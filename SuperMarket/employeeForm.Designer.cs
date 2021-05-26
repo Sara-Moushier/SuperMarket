@@ -72,6 +72,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Employee";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.employeeForm_FormClosing);
+            this.Load += new System.EventHandler(this.employeeForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

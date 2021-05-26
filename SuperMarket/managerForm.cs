@@ -31,5 +31,12 @@ namespace SuperMarket
         {
             this.Hide();
         }
+
+        private void managerForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            this.Hide();
+            loginForm loginForm = new loginForm();
+            loginForm.Show();
+        }
     }
 }
