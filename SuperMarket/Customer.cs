@@ -46,48 +46,36 @@ namespace SuperMarket
         }
 
         private void Add_Click(object sender, EventArgs e)
-        {           
-            OracleCommand C1 = new OracleCommand();
-            C1.Connection = Conn;
-            C1.CommandText = "Select * from customer where CID=:id";
-            C1.CommandType = CommandType.Text;
-            C1.Parameters.Add("id", CustIDs.Text);
-            int ret = C1.ExecuteNonQuery();
-
-            if (CustIDs.Text != null && Cust_Name.Text != null && Cust_Phone.Text != null && Cust_Address.Text != null)
-            {
-                MessageBox.Show(
-                   "Invalid Data, Try Again",
-                   "Error",
-                   MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+        {
+            OracleCommand cmd = new OracleCommand();
+            cmd.Connection = Conn;
+            cmd.CommandText = "GetCustID";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("id", OracleDbType.Int32, ParameterDirection.Output);
+            cmd.ExecuteNonQuery();
+            int newID, maxID;
             try
             {
-                OracleCommand cmd2 = new OracleCommand();
-                cmd2.Connection = Conn;
-                cmd2.CommandText = "INSERT INTO customer Values(:CID, :CName, :CPhone, :CAddress)";
-                cmd2.CommandType = CommandType.Text;
-                cmd2.Parameters.Add("CID", CustIDs.Text);
-                cmd2.Parameters.Add("CName", Cust_Name.Text);
-                cmd2.Parameters.Add("CPhone", Cust_Phone.Text);
-                cmd2.Parameters.Add("CAddress", Cust_Address.Text);
-                int r = cmd2.ExecuteNonQuery();
-                if (r != -1)
-                {
-                    CustIDs.Items.Add(CustIDs.Text);
-                    MessageBox.Show("Customer Added Successfully");
-                }
-
+                maxID = int.Parse(cmd.Parameters["id"].Value.ToString());
+                newID = maxID + 1;
             }
             catch
             {
-                MessageBox.Show(
-                    "Invalid Data, Try Again",
-                    "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                newID = 1;
             }
-           
+            OracleCommand cmd2 = new OracleCommand();
+            cmd2.Connection = Conn;
+            cmd2.CommandText = "INSERT INTO customer Values(:CID, :CName, :CPhone, :CAddress)";
+            cmd2.CommandType = CommandType.Text;
+            cmd2.Parameters.Add("CID", newID);
+            cmd2.Parameters.Add("CName", Cust_Name.Text);
+            cmd2.Parameters.Add("CPhone", Cust_Phone.Text);
+            cmd2.Parameters.Add("CAddress", Cust_Address.Text);
+            int r = cmd2.ExecuteNonQuery();
+            if (r != -1)
+            {
+                MessageBox.Show("Customer Added Successfully");
+            }
         }    
         private void CustIDs_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -111,7 +99,7 @@ namespace SuperMarket
             cmd.Connection = Conn;
             cmd.CommandText = "UpdateCustomer";
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.Add("id", CustIDs.Text);
+            cmd.Parameters.Add("id", CustIDs.SelectedItem.ToString());
             cmd.Parameters.Add("name", Cust_Name.Text);
             cmd.Parameters.Add("phone", Cust_Phone.Text);
             cmd.Parameters.Add("address", Cust_Address.Text);
@@ -129,7 +117,7 @@ namespace SuperMarket
             int r = cmd.ExecuteNonQuery();
             if (r != -1)
             {
-                CustIDs.Items.Remove(CustIDs.Text);
+                CustIDs.Items.RemoveAt(CustIDs.SelectedIndex);
                 Cust_Name.Text = "";
                 Cust_Phone.Text = "";
                 Cust_Address.Text = "";
@@ -139,19 +127,9 @@ namespace SuperMarket
 
         private void AddOrder_Click(object sender, EventArgs e)
         {
-            try
-            {
-                CustomerID = int.Parse(CustIDs.Text);
-                Order form = new Order();
-                form.Show();
-            }
-            catch
-            {
-                MessageBox.Show(
-                    "Please Enter Customer ID",
-                    "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            CustomerID = int.Parse(CustIDs.Text);
+            Order form = new Order();
+            form.Show();
         }
 
         private void Customer_FormClosing(object sender, FormClosingEventArgs e)
