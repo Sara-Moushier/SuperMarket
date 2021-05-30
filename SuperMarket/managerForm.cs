@@ -20,6 +20,8 @@ namespace SuperMarket
         private void AddEmpBtn_Click(object sender, EventArgs e)
         {
             this.Hide();
+            AddEmployeeForm addEmployeeForm = new AddEmployeeForm();
+            addEmployeeForm.Show();
         }
 
         private void AddSupBtn_Click(object sender, EventArgs e)
